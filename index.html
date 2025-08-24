@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Robotics — Community Robotics for Students</title>
+  <meta name="description" content="A community-led robotics program for students. Build, program, and compete with robots while learning engineering and teamwork." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='12' width='64' height='64' fill='%230a7cff'/%3E%3Cpath d='M19 41h26v5H19zM17 20h30v14H17zM25 18v-4h14v4' fill='white'/%3E%3Ccircle cx='24' cy='27' r='2' fill='%230a7cff'/%3E%3Ccircle cx='40' cy='27' r='2' fill='%230a7cff'/%3E%3C/svg%3E" />
+  <style>
+    /* =========================
+       Base & Reset
+       ========================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    :root{
+      --bg: #0b0f19;          /* page bg */
+      --panel: #0f1629;       /* cards/sections */
+      --panel-2: #0b1222;     /* alt panels */
+      --text: #e6e9ef;        /* main text */
+      --muted: #b7c0d1;       /* secondary text */
+      --brand: #2ea3ff;       /* accent */
+      --brand-2: #7dd3fc;     /* light accent */
+      --success: #34d399;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --ring: #66b8ff66;
+      --radius: 16px;
+      --shadow: 0 10px 25px rgba(0,0,0,.35), 0 2px 8px rgba(0,0,0,.35);
+      --shadow-soft: 0 6px 16px rgba(0,0,0,.25);
+    }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% -10%, #122046, transparent 60%),
+                  radial-gradient(1000px 500px at 110% 10%, #11203e, transparent 60%),
+                  var(--bg);
+    }
+    img{max-width:100%; display:block;}
+    a{color:var(--brand); text-decoration: none;}
+    a:hover{ text-decoration: underline; }
+    .container{ width: min(1200px, 92%); margin: 0 auto; }
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap;}
+
+    /* =========================
+       Header / Nav
+       ========================= */
+    .skip-link{ position: absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip-link:focus{ left: 16px; top: 16px; width:auto; height:auto; padding:10px 14px; background:#111827; color:#fff; border-radius:8px; outline:2px solid var(--brand); z-index: 9999; }
+
+    header.site-header{
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(160%) blur(8px);
+      background: linear-gradient(180deg, rgba(10,14,25,.9), rgba(10,14,25,.6));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap: 16px; padding: 14px 0;
+    }
+    .brand{ display:flex; align-items:center; gap:10px; }
+    .brand .logo{ width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg, var(--brand), #0877f0); box-shadow: 0 6px 14px rgba(46,163,255,.35); }
+    .brand .logo svg{ width:22px; height:22px; fill:white; }
+    .brand .name{ font-weight:700; letter-spacing:.3px; }
+    .nav-links{ display:flex; gap: 20px; align-items:center; }
+    .nav-links a{ color: var(--text); opacity:.9; font-weight:500; }
+    .nav-cta{ display:flex; gap: 10px; align-items:center; }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 14px; border-radius:10px; border:1px solid transparent; font-weight:600; cursor:pointer; transition: transform .05s ease, box-shadow .2s ease, border-color .2s ease; }
+    .btn:hover{ transform: translateY(-1px); }
+    .btn:focus{ outline: none; box-shadow: 0 0 0 4px var(--ring); }
+    .btn.primary{ background: linear-gradient(135deg, var(--brand), #0a7cff); color:#00121f; border-color: #56b4ff; box-shadow: 0 8px 20px rgba(46,163,255,.35); }
+    .btn.ghost{ background: transparent; color: var(--text); border-color: rgba(255,255,255,.15); }
+
+    /* Mobile nav */
+    .hamburger{ display:none; background:none; border:none; color:var(--text); }
+    @media (max-width: 900px){
+      .nav-links{ display:none; }
+      .hamburger{ display:inline-flex; padding:10px; border-radius:10px; }
+      .mobile-drawer{ position: fixed; inset: 0 0 0 auto; width: 92%; max-width: 360px; background: #0d1426; border-left:1px solid rgba(255,255,255,.06); box-shadow: var(--shadow); transform: translateX(100%); transition: transform .25s ease; z-index: 60; }
+      .mobile-drawer.open{ transform: translateX(0); }
+      .mobile-drawer .inner{ padding: 16px; display:flex; flex-direction:column; gap: 14px; }
+      .mobile-drawer a{ color: var(--text); padding: 10px 12px; border-radius:10px; }
+      .mobile-drawer a:hover{ background: rgba(255,255,255,.06); text-decoration:none; }
+    }
+
+    /* =========================
+       Hero
+       ========================= */
+    .hero{ position:relative; isolation:isolate; }
+    .hero .container{ display:grid; grid-template-columns: 1.2fr 1fr; gap: 36px; align-items:center; padding: 52px 0 34px; }
+    .kicker{ display:inline-flex; align-items:center; gap:8px; font-size: 13px; color: var(--brand-2); background: rgba(125, 211, 252, .08); padding: 6px 10px; border-radius:999px; border:1px solid rgba(125, 211, 252, .22); }
+    .hero h1{ font-size: clamp(34px, 5vw, 54px); line-height: 1.04; margin: 12px 0 10px; letter-spacing: -0.5px; }
+    .hero p{ font-size: clamp(16px, 2.2vw, 18px); color: var(--muted); margin: 0 0 22px; }
+    .hero .cta{ display:flex; flex-wrap: wrap; gap: 12px; }
+
+    .hero-visual{ position:relative; }
+    .hero-card{ background: linear-gradient(180deg, rgba(22,31,54,.9), rgba(15,22,41,.9)); border:1px solid rgba(255,255,255,.06); border-radius: var(--radius); box-shadow: var(--shadow); padding:18px; }
+    .hero-grid{ display:grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+    .tile{ background: #0f1730; border:1px solid rgba(255,255,255,.06); border-radius: 14px; aspect-ratio: 1/1; display:grid; place-items:center; font-weight:700; color:#93c5fd; }
+    .tile strong{ font-size: 18px; display:block; color:#e0f2fe; }
+
+    .hero-badges{ margin-top: 12px; display:flex; gap: 10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-size:14px; }
+    .hero-badges .check{ width: 18px; height:18px; border-radius:999px; display:inline-grid; place-items:center; background:#13223f; border:1px solid rgba(255,255,255,.1); margin-right: 6px; }
+
+    @media (max-width: 900px){
+      .hero .container{ grid-template-columns: 1fr; padding: 30px 0 10px; }
+    }
+
+    /* =========================
+       Highlights / Features
+       ========================= */
+    .section{ padding: 54px 0; }
+    .section h2{ font-size: clamp(26px, 4vw, 36px); margin: 0 0 14px; }
+    .section p.lead{ color: var(--muted); margin: 0 0 28px; }
+
+    .cards{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card{ background: linear-gradient(180deg, rgba(15,22,41,.9), rgba(11,18,34,.9)); border:1px solid rgba(255,255,255,.06); border-radius: var(--radius); padding:18px; box-shadow: var(--shadow-soft); display:flex; flex-direction:column; gap:10px; }
+    .card h3{ margin: 6px 0 6px; font-size: 20px; }
+    .card p{ color: var(--muted); margin: 0; }
+    .icon{ width: 44px; height:44px; border-radius: 10px; display:grid; place-items:center; background:#112042; border:1px solid rgba(255,255,255,.06); }
+
+    @media (max-width: 900px){
+      .cards{ grid-template-columns: 1fr; }
+    }
+
+    /* =========================
+       Events / News
+       ========================= */
+    .grid-2{ display:grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; }
+    @media (max-width: 900px){ .grid-2{ grid-template-columns: 1fr; } }
+
+    .list{ background: linear-gradient(180deg, rgba(14,22,40,.88), rgba(12,18,34,.88)); border:1px solid rgba(255,255,255,.06); border-radius: var(--radius); }
+    .list .item{ display:flex; gap: 14px; padding: 16px; border-top: 1px solid rgba(255,255,255,.06); }
+    .list .item:first-child{ border-top: 0; }
+    .pill{ font-size: 12px; padding: 4px 8px; border-radius: 999px; border:1px solid rgba(255,255,255,.15); color: var(--brand-2); background: rgba(125,211,252,.06); white-space: nowrap; }
+    .item .meta{ color: var(--muted); font-size: 14px; }
+
+    /* =========================
+       Sponsors strip
+       ========================= */
+    .sponsors{ display:flex; gap: 28px; flex-wrap: wrap; align-items:center; opacity:.85; }
+    .sponsor{ padding: 10px 16px; border-radius: 12px; border:1px dashed rgba(255,255,255,.08); background: rgba(255,255,255,.02); }
+
+    /* =========================
+       Newsletter
+       ========================= */
+    .newsletter{ display:flex; gap: 10px; }
+    .newsletter input{ flex:1; min-width: 220px; padding:12px 14px; border-radius: 10px; border:1px solid rgba(255,255,255,.15); background:#0e1730; color:var(--text); }
+    .newsletter input::placeholder{ color:#9fb0c8; }
+
+    /* =========================
+       Footer
+       ========================= */
+    footer{ margin-top: 40px; padding: 30px 0 60px; color: var(--muted); border-top: 1px solid rgba(255,255,255,.06); background: linear-gradient(180deg, rgba(10,14,25,.6), rgba(10,14,25,.95)); }
+    .footer-grid{ display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 18px; }
+    .footer-grid h4{ color: var(--text); margin: 0 0 10px; }
+    .footer-grid a{ color: var(--muted); }
+    .footer-bottom{ display:flex; justify-content:space-between; align-items:center; gap: 16px; margin-top: 22px; font-size: 14px; }
+    @media (max-width: 900px){ .footer-grid{ grid-template-columns: 1fr 1fr; } .footer-bottom{ flex-direction: column; align-items:flex-start; } }
+
+    /* Motion preferences */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" role="banner">
+    <div class="container nav">
+      <a class="brand" href="#" aria-label="Home">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a2 2 0 0 1 2 2v1h2.5A3.5 3.5 0 0 1 20 8.5V15a3 3 0 0 1-3 3h-1.5a1.5 1.5 0 1 1 0-3H17a1 1 0 0 0 1-1V9a2 2 0 0 0-2-2H14v1a2 2 0 1 1-4 0V7H8a2 2 0 0 0-2 2v5a1 1 0 0 0 1 1h1.5a1.5 1.5 0 1 1 0 3H7a3 3 0 0 1-3-3V8.5A3.5 3.5 0 0 1 7.5 5H10V4a2 2 0 0 1 2-2Z" fill="white"/></svg>
+        </span>
+        <span class="name">Student Robotics</span>
+      </a>
+
+      <nav aria-label="Primary" class="nav-links">
+        <a href="#competition">Competition</a>
+        <a href="#resources">Resources</a>
+        <a href="#events">Events</a>
+        <a href="#sponsors">Sponsors</a>
+        <a href="#about">About</a>
+      </nav>
+
+      <div class="nav-cta">
+        <a class="btn ghost" href="#resources">Docs</a>
+        <a class="btn primary" href="#join">Join Us</a>
+        <button class="hamburger" aria-label="Open menu" aria-controls="mobile-drawer" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-drawer" class="mobile-drawer" hidden>
+      <div class="inner">
+        <a href="#competition">Competition</a>
+        <a href="#resources">Resources</a>
+        <a href="#events">Events</a>
+        <a href="#sponsors">Sponsors</a>
+        <a href="#about">About</a>
+        <a class="btn primary" href="#join">Join Us</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-label="Hero">
+      <div class="container">
+        <div>
+          <span class="kicker">Community-led · Open-source · Hands-on</span>
+          <h1>Build. Program. Compete.<br/>Learn robotics the fun way.</h1>
+          <p>
+            We help students design, build, and program robots — and then put them to the test
+            in friendly competitions. Join a welcoming community of mentors and makers.
+          </p>
+          <div class="cta">
+            <a class="btn primary" href="#join">Get started</a>
+            <a class="btn ghost" href="#watch">Watch a demo</a>
+          </div>
+          <div class="hero-badges" style="margin-top:16px">
+            <span><span class="check" aria-hidden="true">✓</span> Free to join</span>
+            <span><span class="check" aria-hidden="true">✓</span> Works with off‑the‑shelf parts</span>
+            <span><span class="check" aria-hidden="true">✓</span> Beginner‑friendly</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card">
+            <div class="hero-grid" aria-hidden="true">
+              <div class="tile"><strong>SR</strong> Kit</div>
+              <div class="tile">C++</div>
+              <div class="tile">Python</div>
+              <div class="tile">Sensors</div>
+              <div class="tile">Motors</div>
+              <div class="tile">AI</div>
+              <div class="tile">CAN</div>
+              <div class="tile">PID</div>
+              <div class="tile">Vision</div>
+              <div class="tile">ROS</div>
+              <div class="tile">ESP32</div>
+              <div class="tile">Code</div>
+            </div>
+            <p class="meta" style="color:var(--muted); margin:12px 4px 0">Swap these tiles with photos from your team or kit.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Highlights -->
+    <section id="competition" class="section" aria-labelledby="competition-title">
+      <div class="container">
+        <h2 id="competition-title">What we do</h2>
+        <p class="lead">From first prototype to competition day, we support students at every step.</p>
+        <div class="cards">
+          <article class="card">
+            <div class="icon" aria-hidden="true">🤖</div>
+            <h3>Annual Challenge</h3>
+            <p>Each year we release a new game. Teams design strategy, build robots, and compete at regional and final events.</p>
+            <p><a href="#">See this year's rules →</a></p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">🧰</div>
+            <h3>Kit & Resources</h3>
+            <p>Starter kit, wiring guides, example code, and tutorials to accelerate learning in the lab and classroom.</p>
+            <p><a href="#resources">Browse resources →</a></p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">🌍</div>
+            <h3>Mentor Community</h3>
+            <p>Volunteers and alumni provide support online and in person. Share tips, get help, and make friends.</p>
+            <p><a href="#join">Become a mentor →</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events & News -->
+    <section id="events" class="section" aria-labelledby="events-title">
+      <div class="container grid-2">
+        <div>
+          <h2 id="events-title">Upcoming events</h2>
+          <div class="list" role="list">
+            <div class="item" role="listitem">
+              <div class="pill" aria-label="Date">Oct 12</div>
+              <div>
+                <strong>Kickoff & Kit Handover</strong>
+                <div class="meta">Local Makerspace · 10:00–16:00</div>
+              </div>
+            </div>
+            <div class="item" role="listitem">
+              <div class="pill" aria-label="Date">Nov 02</div>
+              <div>
+                <strong>Programming Workshop</strong>
+                <div class="meta">Room 204, Tech Building · 13:00–17:00</div>
+              </div>
+            </div>
+            <div class="item" role="listitem">
+              <div class="pill" aria-label="Date">Jan 18</div>
+              <div>
+                <strong>Scrimmage #1</strong>
+                <div class="meta">Community Hall · 09:30–15:30</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h2>News</h2>
+          <div class="list" role="list">
+            <div class="item" role="listitem">
+              <div class="pill">Announcement</div>
+              <div>
+                <strong>2025 challenge theme revealed</strong>
+                <div class="meta">Posted Aug 24, 2025</div>
+              </div>
+            </div>
+            <div class="item" role="listitem">
+              <div class="pill">Blog</div>
+              <div>
+                <strong>How we built a low‑cost vision pipeline</strong>
+                <div class="meta">Read time: 6 min</div>
+              </div>
+            </div>
+            <div class="item" role="listitem">
+              <div class="pill">Results</div>
+              <div>
+                <strong>Spring scrimmage results & photos</strong>
+                <div class="meta">Congrats to all teams!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resources -->
+    <section id="resources" class="section" aria-labelledby="resources-title">
+      <div class="container">
+        <h2 id="resources-title">Resources for teams</h2>
+        <p class="lead">Get up and running quickly with guides, code samples, and wiring diagrams.</p>
+        <div class="cards">
+          <article class="card">
+            <div class="icon" aria-hidden="true">📘</div>
+            <h3>Quickstart Guide</h3>
+            <p>Unbox the kit, connect components, and run your first program.</p>
+            <p><a href="#">Open quickstart →</a></p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">💻</div>
+            <h3>Template Code</h3>
+            <p>Starter projects in Python and C++ with examples for motors, sensors, and vision.</p>
+            <p><a href="#">Download templates →</a></p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">🔌</div>
+            <h3>Electronics & Wiring</h3>
+            <p>Schematics and best practices for safe, reliable bots.</p>
+            <p><a href="#">View diagrams →</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sponsors -->
+    <section id="sponsors" class="section" aria-labelledby="sponsors-title">
+      <div class="container">
+        <h2 id="sponsors-title">Sponsors & partners</h2>
+        <p class="lead">We’re grateful to the organizations that support our students.</p>
+        <div class="sponsors">
+          <div class="sponsor">Your Logo</div>
+          <div class="sponsor">Tech Co</div>
+          <div class="sponsor">Makerspace</div>
+          <div class="sponsor">University</div>
+          <div class="sponsor">Community Bank</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Join / Newsletter -->
+    <section id="join" class="section" aria-labelledby="join-title">
+      <div class="container">
+        <div class="list" style="padding:18px;">
+          <h2 id="join-title" style="margin:6px 0 4px;">Join the community</h2>
+          <p class="lead" style="margin:0 0 16px;">Students, mentors, schools, and sponsors are all welcome. Subscribe for updates or email us to get involved.</p>
+          <form class="newsletter" onsubmit="return subscribe(event)">
+            <label class="visually-hidden" for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@example.org" required />
+            <button class="btn primary" type="submit">Subscribe</button>
+            <span id="sub-result" aria-live="polite" style="align-self:center; font-size:14px; color:var(--muted);"></span>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="about" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="#" aria-label="Home">
+            <span class="logo" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a2 2 0 0 1 2 2v1h2.5A3.5 3.5 0 0 1 20 8.5V15a3 3 0 0 1-3 3h-1.5a1.5 1.5 0 1 1 0-3H17a1 1 0 0 0 1-1V9a2 2 0 0 0-2-2H14v1a2 2 0 1 1-4 0V7H8a2 2 0 0 0-2 2v5a1 1 0 0 0 1 1h1.5a1.5 1.5 0 1 1 0 3H7a3 3 0 0 1-3-3V8.5A3.5 3.5 0 0 1 7.5 5H10V4a2 2 0 0 1 2-2Z" fill="white"/></svg>
+            </span>
+            <span class="name">Student Robotics</span>
+          </a>
+          <p style="margin:8px 0 0;">A volunteer‑run, not‑for‑profit community helping students learn robotics by doing.</p>
+        </div>
+        <div>
+          <h4>Program</h4>
+          <nav>
+            <a href="#competition">Competition</a><br />
+            <a href="#resources">Resources</a><br />
+            <a href="#events">Events</a>
+          </nav>
+        </div>
+        <div>
+          <h4>Get involved</h4>
+          <nav>
+            <a href="#join">Join</a><br />
+            <a href="#join">Volunteer</a><br />
+            <a href="#sponsors">Sponsor</a>
+          </nav>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <nav>
+            <a href="mailto:hello@example.org">hello@example.org</a><br />
+            <a href="#">Code of Conduct</a><br />
+            <a href="#">Privacy Policy</a>
+          </nav>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© <span id="year"></span> Student Robotics. All rights reserved.</div>
+        <div>Made with ❤️ by volunteers.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav drawer
+    const btn = document.querySelector('.hamburger');
+    const drawer = document.getElementById('mobile-drawer');
+    if(btn && drawer){
+      btn.addEventListener('click', () => {
+        const open = drawer.classList.toggle('open');
+        drawer.hidden = false;
+        btn.setAttribute('aria-expanded', String(open));
+      });
+      drawer.addEventListener('click', (e) => {
+        if(e.target.tagName === 'A'){
+          drawer.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // Newsletter (demo only)
+    function subscribe(ev){
+      ev.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const out = document.getElementById('sub-result');
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        out.textContent = 'Please enter a valid email.';
+        return false;
+      }
+      out.textContent = 'Thanks! You\'re on the list.';
+      ev.target.reset();
+      return false; // prevent actual submit
+    }
+
+    // Dynamic year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
